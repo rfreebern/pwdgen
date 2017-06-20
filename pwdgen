@@ -1,0 +1,28 @@
+#!/bin/bash
+# Generates a fairly simple password consisting of one lowercased word, one capitalized word, one symbol, and one number, in random order.
+
+DICT=/usr/share/dict/google-10000-english-usa-no-swears-medium.txt
+WORDS=( $(shuf -n 2 $DICT | tr "\n" " ") )
+NUM=$[$RANDOM % 100]
+
+SYMBOLS=("!" "@" "#" "%" "^" "&" "-" "+" "=" "~" "," "?" ":" ";")
+SYMBOL=${SYMBOLS[$RANDOM % ${#SYMBOLS[@]}]}
+
+ITEMS=( $(echo "w W n s" | sed -r 's/(.[^ ]* )/ \1 /g' | tr " " "\n" | shuf | tr "\n" " ") )
+for i in "${ITEMS[@]}"
+do
+    case $i in
+        w)
+            echo -n ${WORDS[0]}
+            ;;
+        W)
+            echo -n ${WORDS[1]^}
+            ;;
+        s)
+            echo -n $SYMBOL
+            ;;
+        n)
+            echo -n $NUM
+    esac
+done
+echo
